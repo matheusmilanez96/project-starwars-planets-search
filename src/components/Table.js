@@ -16,6 +16,7 @@ export default function Table() {
     data2 = data;
   }
 
+  // test
   return (
     <div>
       { loading && <h1>Carregando...</h1> }
