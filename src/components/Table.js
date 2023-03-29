@@ -4,22 +4,39 @@ import useFetch from '../hooks/useFetch';
 
 export default function Table() {
   const input = useContext(FilterContext);
-  const { filterInput } = input;
-  const { value } = filterInput;
-  const { data, loading } = useFetch('https://swapi.dev/api/planets');
+  const { filterInput, columnInput, operatorInput, valueInput, buttonClick } = input;
+  const filterValue = filterInput.value;
+  const columnValue = columnInput.value;
+  const operatorValue = operatorInput.value;
+  const valueValue = valueInput.value;
+  let { data } = useFetch('https://swapi.dev/api/planets');
   delete data.residents;
 
+  if (filterValue) {
+    data = data.filter((planet) => planet.name.includes(filterValue));
+  }
+
+  console.log(columnValue);
+  console.log(operatorValue);
+  console.log(valueValue);
+  console.log(buttonClick);
+
   let data2;
-  if (value) {
-    data2 = data.filter((planet) => planet.name.includes(value));
+
+  if (buttonClick === true) {
+    if (operatorValue === 'maior que') {
+      data2 = data.filter((planet) => Number(planet[columnValue]) > Number(valueValue));
+    } else if (operatorValue === 'menor que') {
+      data2 = data.filter((planet) => Number(planet[columnValue]) < Number(valueValue));
+    } else if (operatorValue === 'igual a') {
+      data2 = data.filter((planet) => Number(planet[columnValue]) === Number(valueValue));
+    }
   } else {
     data2 = data;
   }
 
-  // test
   return (
     <div>
-      { loading && <h1>Carregando...</h1> }
       <table>
         <thead>
           <tr>
