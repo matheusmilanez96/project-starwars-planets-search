@@ -8,10 +8,11 @@ export default function Filter() {
     columnInput,
     operatorInput,
     valueInput,
+    currentFilters,
     setColumnInput,
     setOperatorInput,
     setValueInput,
-    setCurrentFilter,
+    setCurrentFilters,
   } = useContext(AppContext);
 
   return (
@@ -63,11 +64,11 @@ export default function Filter() {
           data-testid="button-filter"
           type="button"
           onClick={ () => {
-            setCurrentFilter({
+            setCurrentFilters([...currentFilters, {
               columnInput,
               operatorInput,
               valueInput,
-            });
+            }]);
           } }
         >
           Filtrar

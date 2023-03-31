@@ -11,11 +11,7 @@ function AppProvider({ children }) {
   const [columnInput, setColumnInput] = useState('population');
   const [operatorInput, setOperatorInput] = useState('maior que');
   const [valueInput, setValueInput] = useState(0);
-  const [currentFilter, setCurrentFilter] = useState({
-    columnInput: '',
-    operatorInput: '',
-    valueInput: 0,
-  });
+  const [currentFilters, setCurrentFilters] = useState([]);
 
   useEffect(() => {
     fetch('https://swapi.dev/api/planets')
@@ -32,25 +28,24 @@ function AppProvider({ children }) {
   }, [filterInput, data]);
 
   useEffect(() => {
-    if (currentFilter.columnInput) {
-      if (currentFilter.operatorInput === 'maior que') {
-        const newFilteredData = data.filter((planet) => Number(
-          planet[currentFilter.columnInput],
-        ) > Number(currentFilter.valueInput));
-        setFilteredData(newFilteredData);
-      } else if (currentFilter.operatorInput === 'menor que') {
-        const newFilteredData = data.filter((planet) => Number(
-          planet[currentFilter.columnInput],
-        ) < Number(currentFilter.valueInput));
-        setFilteredData(newFilteredData);
-      } else if (currentFilter.operatorInput === 'igual a') {
-        const newFilteredData = data.filter((planet) => Number(
-          planet[currentFilter.columnInput],
-        ) === Number(currentFilter.valueInput));
+    const compareBy = {
+      'maior que': (a, b) => a > b,
+      'menor que': (a, b) => a < b,
+      'igual a': (a, b) => a === b,
+    };
+
+    currentFilters.forEach((curr) => {
+      console.log(currentFilters);
+      if (curr.columnInput) {
+        const newFilteredData = filteredData.filter(
+          (planet) => compareBy[curr.operatorInput](Number(
+            planet[curr.columnInput],
+          ), Number(curr.valueInput)),
+        );
         setFilteredData(newFilteredData);
       }
-    }
-  }, [currentFilter, data]);
+    });
+  }, [currentFilters, filteredData]);
 
   const values = useMemo(() => ({
     data,
@@ -61,11 +56,12 @@ function AppProvider({ children }) {
     columnInput,
     operatorInput,
     valueInput,
+    currentFilters,
     setFilterInput,
     setColumnInput,
     setOperatorInput,
     setValueInput,
-    setCurrentFilter,
+    setCurrentFilters,
   }), [
     data,
     loading,
@@ -75,6 +71,7 @@ function AppProvider({ children }) {
     columnInput,
     operatorInput,
     valueInput,
+    currentFilters,
   ]);
 
   return (
