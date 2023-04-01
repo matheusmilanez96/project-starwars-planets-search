@@ -11,7 +11,11 @@ function AppProvider({ children }) {
   const [columnInput, setColumnInput] = useState('population');
   const [operatorInput, setOperatorInput] = useState('maior que');
   const [valueInput, setValueInput] = useState(0);
-  const [currentFilters, setCurrentFilters] = useState([]);
+  const [currentFilters, setCurrentFilters] = useState([{
+    columnInput: '',
+    operatorInput: '',
+    valueInput: 0,
+  }]);
 
   useEffect(() => {
     fetch('https://swapi.dev/api/planets')
@@ -35,7 +39,6 @@ function AppProvider({ children }) {
     };
 
     currentFilters.forEach((curr) => {
-      console.log(currentFilters);
       if (curr.columnInput) {
         const newFilteredData = filteredData.filter(
           (planet) => compareBy[curr.operatorInput](Number(
@@ -58,6 +61,7 @@ function AppProvider({ children }) {
     valueInput,
     currentFilters,
     setFilterInput,
+    setFilteredData,
     setColumnInput,
     setOperatorInput,
     setValueInput,
