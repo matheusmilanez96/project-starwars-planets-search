@@ -7,12 +7,14 @@ function AppProvider({ children }) {
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState(data);
+  const [newData, setNewData] = useState(data);
   const [filterInput, setFilterInput] = useState('');
   const [columnInput, setColumnInput] = useState('population');
   const [operatorInput, setOperatorInput] = useState('maior que');
   const [valueInput, setValueInput] = useState(0);
   const [currentFilters, setCurrentFilters] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
+  const [array, setArray] = useState([]);
 
   useEffect(() => {
     fetch('https://swapi.dev/api/planets')
@@ -29,22 +31,28 @@ function AppProvider({ children }) {
   }, [filterInput, data]);
 
   useEffect(() => {
+    setNewData(filteredData);
+  }, [filteredData]);
+
+  useEffect(() => {
     const compareBy = {
       'maior que': (a, b) => a > b,
       'menor que': (a, b) => a < b,
       'igual a': (a, b) => a === b,
     };
 
+    let arr = [];
     currentFilters.forEach((curr) => {
       if (curr.columnInput) {
         const newFilteredData = filteredData.filter(
-          (planet) => compareBy[curr.operatorInput](Number(
+          (planet) => !compareBy[curr.operatorInput](Number(
             planet[curr.columnInput],
           ), Number(curr.valueInput)),
         );
-        setFilteredData(newFilteredData);
+        arr = [...arr, ...newFilteredData];
       }
     });
+    setArray([...arr]);
   }, [currentFilters, filteredData]);
 
   useEffect(() => {
@@ -53,7 +61,6 @@ function AppProvider({ children }) {
       filt.push(curr.columnInput);
     });
     setColumnFilters(filt);
-    console.log(filt);
   }, [currentFilters]);
 
   const values = useMemo(() => ({
@@ -62,13 +69,14 @@ function AppProvider({ children }) {
     error,
     filterInput,
     filteredData,
+    newData,
     columnInput,
     operatorInput,
     valueInput,
     currentFilters,
     columnFilters,
+    array,
     setFilterInput,
-    setFilteredData,
     setColumnInput,
     setOperatorInput,
     setValueInput,
@@ -79,11 +87,13 @@ function AppProvider({ children }) {
     error,
     filterInput,
     filteredData,
+    newData,
     columnInput,
     operatorInput,
     valueInput,
     currentFilters,
     columnFilters,
+    array,
   ]);
 
   return (

@@ -16,6 +16,17 @@ export default function Filter() {
     setCurrentFilters,
   } = useContext(AppContext);
 
+  const allColumns = ['population', 'orbital_period',
+    'diameter', 'rotation_period', 'surface_water'];
+
+  const filteredColumns = allColumns.filter((column) => (
+    !columnFilters.includes(column)
+  ));
+
+  if (!filteredColumns.includes(columnInput)) {
+    setColumnInput(filteredColumns[0]);
+  }
+
   return (
     <fieldset>
       <input
@@ -33,16 +44,14 @@ export default function Filter() {
           onChange={ (e) => setColumnInput(e.target.value) }
           value={ columnInput }
         >
-          { !columnFilters.includes('population')
-            && <option value="population">population</option>}
-          { !columnFilters.includes('orbital_period')
-            && <option value="orbital_period">orbital_period</option>}
-          { !columnFilters.includes('diameter')
-            && <option value="diameter">diameter</option>}
-          { !columnFilters.includes('rotation_period')
-            && <option value="rotation_period">rotation_period</option>}
-          { !columnFilters.includes('surface_water')
-            && <option value="surface_water">surface_water</option>}
+          { filteredColumns.map((column, index) => (
+            <option
+              value={ column }
+              key={ index }
+            >
+              {column}
+            </option>
+          ))}
         </select>
         <p>Operador</p>
         <select
@@ -80,6 +89,35 @@ export default function Filter() {
           Filtrar
         </button>
       </form>
+      <br />
+      <div>
+        { currentFilters.map((filter, index) => (
+          <div key={ index } data-testid="filter">
+            <button
+              type="button"
+              onClick={ () => {
+                const newData = currentFilters.filter((curr) => (
+                  !curr.columnInput.includes(filter.columnInput)
+                ));
+                setCurrentFilters(newData);
+              } }
+            >
+              { filter.columnInput }
+              {' '}
+              { filter.operatorInput }
+              {' '}
+              { filter.valueInput }
+            </button>
+          </div>
+        )) }
+      </div>
+      <button
+        type="button"
+        data-testid="button-remove-filters"
+        onClick={ () => setCurrentFilters([]) }
+      >
+        Remover filtros
+      </button>
     </fieldset>
   );
 }

@@ -2,8 +2,22 @@ import { useContext } from 'react';
 import AppContext from '../context/AppContext';
 
 export default function Table() {
-  const { filteredData, loading } = useContext(AppContext);
-  delete filteredData.residents;
+  const { newData, loading, array } = useContext(AppContext);
+  delete newData.residents;
+
+  const finalData = newData.filter((planet) => {
+    let found = true;
+    if (array.length > 0) {
+      array.forEach((currArray) => {
+        if (currArray.name.includes(planet.name)) {
+          found = false;
+        }
+      });
+    }
+    return found;
+  });
+
+  // console.log(finalData);
 
   return (
     <div>
@@ -26,7 +40,7 @@ export default function Table() {
             <th scope="col">URL</th>
           </tr>
         </thead>
-        { filteredData.map((planet, index) => (
+        { finalData.map((planet, index) => (
           <tbody key={ index }>
             <tr>
               <td>{ planet.name }</td>
