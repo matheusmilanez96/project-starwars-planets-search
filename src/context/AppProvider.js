@@ -11,11 +11,8 @@ function AppProvider({ children }) {
   const [columnInput, setColumnInput] = useState('population');
   const [operatorInput, setOperatorInput] = useState('maior que');
   const [valueInput, setValueInput] = useState(0);
-  const [currentFilters, setCurrentFilters] = useState([{
-    columnInput: '',
-    operatorInput: '',
-    valueInput: 0,
-  }]);
+  const [currentFilters, setCurrentFilters] = useState([]);
+  const [columnFilters, setColumnFilters] = useState([]);
 
   useEffect(() => {
     fetch('https://swapi.dev/api/planets')
@@ -50,6 +47,15 @@ function AppProvider({ children }) {
     });
   }, [currentFilters, filteredData]);
 
+  useEffect(() => {
+    const filt = [];
+    currentFilters.forEach((curr) => {
+      filt.push(curr.columnInput);
+    });
+    setColumnFilters(filt);
+    console.log(filt);
+  }, [currentFilters]);
+
   const values = useMemo(() => ({
     data,
     loading,
@@ -60,6 +66,7 @@ function AppProvider({ children }) {
     operatorInput,
     valueInput,
     currentFilters,
+    columnFilters,
     setFilterInput,
     setFilteredData,
     setColumnInput,
@@ -76,6 +83,7 @@ function AppProvider({ children }) {
     operatorInput,
     valueInput,
     currentFilters,
+    columnFilters,
   ]);
 
   return (

@@ -9,6 +9,7 @@ export default function Filter() {
     operatorInput,
     valueInput,
     currentFilters,
+    columnFilters,
     setColumnInput,
     setOperatorInput,
     setValueInput,
@@ -32,11 +33,16 @@ export default function Filter() {
           onChange={ (e) => setColumnInput(e.target.value) }
           value={ columnInput }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          { !columnFilters.includes('population')
+            && <option value="population">population</option>}
+          { !columnFilters.includes('orbital_period')
+            && <option value="orbital_period">orbital_period</option>}
+          { !columnFilters.includes('diameter')
+            && <option value="diameter">diameter</option>}
+          { !columnFilters.includes('rotation_period')
+            && <option value="rotation_period">rotation_period</option>}
+          { !columnFilters.includes('surface_water')
+            && <option value="surface_water">surface_water</option>}
         </select>
         <p>Operador</p>
         <select
