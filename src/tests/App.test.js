@@ -113,31 +113,31 @@ describe('Testa a aplicação', () => {
     expect(alderaan).not.toBeInTheDocument();
   });
 
-  // it('Verifica se os filtros funcionam corretamente', async () => {
-  //   jest.spyOn(global, 'fetch');
-  //   global.fetch.mockResolvedValue({
-  //     json: jest.fn().mockResolvedValue(testData),
-  //   });
+  it('Verifica se os filtros funcionam corretamente', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(testData),
+    });
 
-  //   await act( async () => render(
-  //     <AppProvider>
-  //       <App/>
-  //     </AppProvider>
-  //   ));
-      
-  //   const columnFilter = screen.getByTestId('column-filter');
-  //   const comparisonFilter = screen.getByTestId('comparison-filter');
-  //   const valueFilter = screen.getByTestId('value-filter');
-  //   const buttonFilter = screen.getByTestId('button-filter');
+    await act( async () => render(
+      <AppProvider>
+        <App/>
+      </AppProvider>
+    ));
 
-  //   userEvent.selectOptions(columnFilter, 'diameter');
-  //   userEvent.selectOptions(comparisonFilter, 'menor que');
-  //   userEvent.type(valueFilter, 8900);
-  //   userEvent.click(buttonFilter);
+    const columnFilter = screen.getByTestId('column-filter');
+    const comparisonFilter = screen.getByTestId('comparison-filter');
+    const valueFilter = screen.getByTestId('value-filter');
+    const buttonFilter = screen.getByTestId('button-filter');
 
-  //   const endor = screen.queryByText('Endor');
-  //   const dagobah = screen.queryByText('Dagobah');
-  //   expect(endor).toBeInTheDocument();
-  //   expect(dagobah).not.toBeInTheDocument();
-  // });
+    userEvent.selectOptions(columnFilter, 'diameter');
+    userEvent.selectOptions(comparisonFilter, 'menor que');
+    userEvent.type(valueFilter, '8900');
+    userEvent.click(buttonFilter);
+
+    const endor = screen.queryByText('Endor');
+    const dagobah = screen.queryByText('Dagobah');
+    expect(endor).toBeInTheDocument();
+    expect(dagobah).not.toBeInTheDocument();
+  });
 });
